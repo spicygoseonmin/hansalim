@@ -37,6 +37,12 @@ window.addEventListener("load", function () {
       BANNER_ARR = obj.bannerarr;
       // 제철요리
       SEASON_GOOD = obj.seasongood;
+      // 리뷰
+      REVIEW_ARR = obj.review;
+      // 공지사항
+      NOTICE_ARR = obj.notice;
+      // 물품소식
+      GOODNEWS_ARR = obj.goodnews;
       // ================
       // 비주얼을 화면에 배치
       showVisual();
@@ -58,6 +64,12 @@ window.addEventListener("load", function () {
       showBannerArr();
       // 제철요리 화면배치
       showSeasonGood();
+      // 리뷰 화면배치
+      showReview();
+      // 공지사항 화면배치
+      showNotice();
+      // 물품소식 화면배치
+      showGoodNews();
     }
   };
   //   자료호출
@@ -99,6 +111,15 @@ window.addEventListener("load", function () {
   // 제철요리 목록
   let SEASON_GOOD;
   let seosonTag = this.document.getElementById("data-season");
+  // 리뷰
+  let REVIEW_ARR;
+  let reviewTag = this.document.getElementById("data-review");
+  // 공지사항
+  let NOTICE_ARR;
+  let noticeTag = this.document.getElementById("data-notice");
+  // 물품소식
+  let GOODNEWS_ARR;
+  let goodNewsTag = this.document.getElementById("data-goodnews");
   // ==============================================
   // 비주얼 화면 출력 기능
   function showVisual() {
@@ -685,10 +706,128 @@ window.addEventListener("load", function () {
     buyTotalMoneyPrice = priceTotal;
     // console.log(buyTotalMoneyPrice);
     // 체크된 갯수만큼 갯수 변경
-    buyTotal.innerHTML = buyTotalCount
+    buyTotal.innerHTML = buyTotalCount;
     // 체크된 갯수만큼 금액 변경
-    bytTotalMoney.innerHTML = priceToString(buyTotalMoneyPrice)
-
+    bytTotalMoney.innerHTML = priceToString(buyTotalMoneyPrice);
+  }
+  // 리뷰 기능 함수
+  function showReview() {
+    let html = `
+    <div class="swiper sw-review">
+    <div class="swiper-wrapper">
+    `;
+    // 데이터처리
+    REVIEW_ARR.forEach(function (item) {
+      // console.log(item);
+      const tag = `
+      <div class="swiper-slide">
+<div class="review-box">
+    <a href="${item.link}">
+        <div class= "review-box-desc">
+            <span class= " review-box-title">
+                ${item.title}
+            </span>
+            <span class="review-box-star"> ${item.star} </span>
+            <span class="review-box-img">
+                <img src="images/${item.pic}" alt="${item.title}"/>
+            </span>
+        </div>
+        <p class="review-box-txt">
+            ${item.txt}
+        </p>
+        <span class="review-box-user">${item.user} (${item.shop})</span>
+    </a>
+</div>
+</div>
+      `;
+      html += tag;
+    });
+    html += `
+    </div>
+</div>
+    `;
+    reviewTag.innerHTML = html;
+    const swReview = new Swiper(".sw-review", {
+      slidesPerView: 3,
+      spaceBetween: 16,
+      slidesPerGroup: 3,
+      navigation: {
+        prevEl: ".review .slide-prev",
+        nextEl: ".review .slide-next",
+      },
+      pagination: {
+        el: ".review .slide-pg",
+        type: "fraction",
+      },
+    });
+  }
+  //공지사항 기능 함수
+  function showNotice() {
+    let html = "";
+    // 데이터 갱신
+    NOTICE_ARR.forEach(function (item) {
+      // console.log(item);
+      const tag = `
+        <li>
+            <a href="${item.link}">
+                <span>
+                    ${item.title}
+                </span><em>${item.date}</em>
+            </a>
+        </li>
+`;
+      html += tag;
+    });
+    noticeTag.innerHTML = html;
+  }
+  //물품소식 기능 함수
+  function showGoodNews() {
+    let html = "";
+    // 데이터 갱신
+    GOODNEWS_ARR.forEach(function (item) {
+      // console.log(item);
+      const tag = `
+        <li>
+            <a href="${item.link}">
+                <span>
+                    ${item.title}
+                </span><em>${item.date}</em>
+            </a>
+        </li>
+`;
+      html += tag;
+    });
+    goodNewsTag.innerHTML = html;
+  }
+  // 커뮤니티 탭메뉴
+  const tabBtArr = this.document.querySelectorAll(".community-bt");
+  // 탭내용
+  const tabConArr = this.document.querySelectorAll(".community-notice dd");
+  // 탭포커스
+  let tabFocusIndex = 0;
+  // 탭 버튼 클릭처리 기능
+  tabBtArr.forEach(function (item, index) {
+    // console.log(item, index);
+    item.addEventListener("click", function () {
+      // console.log(item ,index);
+      tabFocusIndex = index;
+      // console.log(tabFocusIndex);
+      tabFocusFn();
+    });
+  });
+  // 탭포커스가 클릭됐을때 보여지는 함수 생성
+  function tabFocusFn() {
+    tabBtArr.forEach(function (item) {
+      // console.log(item);
+      item.classList.remove("community-bt-active");
+    });
+    tabConArr.forEach(function (item) {
+      // console.log(item);
+      item.classList.remove("community-visible-active");
+    });
+    // 인덱스에 해당하는것만 적용
+    tabBtArr[tabFocusIndex].classList.add("community-bt-active");
+    tabConArr[tabFocusIndex].classList.add("community-visible-active");
   }
   //   ==========================end
 });
